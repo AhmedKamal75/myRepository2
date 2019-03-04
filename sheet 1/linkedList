@@ -1,0 +1,169 @@
+public class LinkedList<T extends Comparable> {
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+    private boolean sorted;
+
+    public LinkedList() {
+        head = new Node<>(null, null, null);
+        tail = new Node<>(null, null, head);
+        head.setNext(tail);
+        size = 0;
+        sorted = false;
+    }
+
+    public T get(int index){
+        return this.getNode(index).getData();
+    }
+
+    public void lapla(){
+      System.out.println(head.compareTo(tail));
+    }
+
+    public boolean add(T data){
+        return add(data,size);
+    }
+
+    public boolean add(T data, int index){
+        if (index == 0) return addFirst(data);
+        if (index == size) return addLast(data);
+        if (index < 0 || index >= size) return false;
+
+        Node<T> node;
+        if (index <= (size / 2)){
+            node = head;
+            for (int i = 0 ; i < index -1 ; i++){
+                node = node.getNext();
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1 ; i >= index - 1 ; i--){
+                node = node.getPrevious();
+            }
+        }
+
+        Node<T> newNode = new Node<>(data,node.getNext(),node);
+        node.getNext().setPrevious(newNode);
+        node.setNext(newNode);
+
+        return true;
+    }
+
+    public boolean addFirst(T data) {
+        if (head.getData() == null) {
+            head.setData(data);
+        } else {
+            Node<T> node = new Node<>(data, head, null);
+            head.setPrevious(node);
+            head = node;
+        }
+        size++;
+        return true;
+    }
+
+    public boolean addLast(T data) {
+        if (head.getData() == null) {
+            return addFirst(data);
+        } else if (tail.getData() == null) {
+            tail.setData(data);
+        } else {
+            Node<T> node = new Node<>(data,null,tail);
+            tail.setNext(node);
+            tail = node;
+        }
+        size++;
+        return true;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> node = head;
+        if (index >= 0 && index < size) {
+            for (int i = 0; i < index; i++) {
+                node = node.getNext();
+            }
+            return node;
+        }
+        return null;
+    }
+
+    private Node<T> getNode(T data) {
+        Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if (node.getData().equals(data)) {
+                return node;
+            }
+            node = node.getNext();
+        }
+        return null;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public String toString(){
+        String s = "[";
+        Node<T> node = head;
+        for (int i = 0 ; i < size ; i++){
+            s += node.getData().toString() + (node.hasNext()?",":"");
+            node = node.getNext();
+        }
+        return s + "]";
+    }
+
+    private class Node<E extends Comparable> implements Comparable<Node<E>> {
+        private T data;
+        private Node<E> next;
+        private Node<E> previous;
+
+        public Node(T data, Node<E> next, Node<E> previous) {
+            this.data = data;
+            this.next = next;
+            this.previous = previous;
+        }
+
+        public boolean hasNext(){
+            return next != null;
+        }
+
+        public boolean hasPrevious(){
+            return previous != null;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public void setData(T data) {
+            this.data = data;
+        }
+
+        public Node<E> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<E> next) {
+            this.next = next;
+        }
+
+        public Node<E> getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(Node<E> previous) {
+            this.previous = previous;
+        }
+
+        public String toString() {
+            return data.toString();
+        }
+
+        public int compareTo(Node<E> node){
+          return this.getData().compareTo(node.this.getData());
+        }
+    }
+}
